@@ -1,4 +1,4 @@
-package com.dalgona.zerozone.member;
+package com.dalgona.zerozone.member.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
