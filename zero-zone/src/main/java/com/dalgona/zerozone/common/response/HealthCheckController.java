@@ -1,6 +1,5 @@
-package com.dalgona.zerozone;
+package com.dalgona.zerozone.common.response;
 
-import com.dalgona.zerozone.common.OnlyResponseString;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

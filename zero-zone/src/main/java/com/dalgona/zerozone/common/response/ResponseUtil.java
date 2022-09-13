@@ -1,4 +1,4 @@
-package com.dalgona.zerozone.common;
+package com.dalgona.zerozone.common.response;
 
 public class ResponseUtil {
     public static <T> BasicResponse<T> success(T response) {

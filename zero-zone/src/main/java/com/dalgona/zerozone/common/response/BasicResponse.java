@@ -1,4 +1,4 @@
-package com.dalgona.zerozone.common;
+package com.dalgona.zerozone.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
