@@ -29,7 +29,7 @@ public class EmailAuthService {
     }
 
     private void updateEmailAuth(String authCode, String email) {
-        EmailAuth emailAuth = getEmailAuth(email);
+        EmailAuth emailAuth = getEmailAuthOrElseThrow(email);
         emailAuth.updateAuthed(false);
         emailAuth.updateAuthCode(authCode);
         emailAuth.updateAuthValidTime(LocalDateTime.now().plusMinutes(5));
@@ -64,12 +64,12 @@ public class EmailAuthService {
 
     @Transactional
     public void verifyEmail(String email, String authCode) throws BadRequestException {
-        EmailAuth emailAuth = getEmailAuth(email);
+        EmailAuth emailAuth = getEmailAuthOrElseThrow(email);
         checkEmailAuthCodeValid(authCode, emailAuth);
         emailAuth.updateAuthed(true);
     }
 
-    private EmailAuth getEmailAuth(String requestedEmail) {
+    private EmailAuth getEmailAuthOrElseThrow(String requestedEmail) {
         return emailAuthRepository.findByEmail(requestedEmail)
                 .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "이메일 인증을 요청한 적 없는 회원입니다."));
     }
