@@ -23,8 +23,17 @@ public class EmailAuthService {
     @Transactional
     public void requestEmailVerify(String email){
         String authCode = EmailAuth.createCode();
-        saveEmailAuth(authCode, email);
+        if(emailAuthRepository.existsByEmail(email)) updateEmailAuth(authCode, email);
+        else saveEmailAuth(authCode, email);
         sendAuthCodeEmail(authCode, email);
+    }
+
+    private void updateEmailAuth(String authCode, String email) {
+        EmailAuth emailAuth = getEmailAuthOrElseThrow(email);
+        emailAuth.updateAuthed(false);
+        emailAuth.updateAuthCode(authCode);
+        emailAuth.updateAuthValidTime(LocalDateTime.now().plusMinutes(5));
+        emailAuthRepository.save(emailAuth);
     }
 
     private void saveEmailAuth(String authCode, String email){
@@ -55,20 +64,24 @@ public class EmailAuthService {
 
     @Transactional
     public void verifyEmail(String email, String authCode) throws BadRequestException {
-        EmailAuth emailAuth = getEmailAuth(email);
+        EmailAuth emailAuth = getEmailAuthOrElseThrow(email);
         checkEmailAuthCodeValid(authCode, emailAuth);
         emailAuth.updateAuthed(true);
     }
 
-    private EmailAuth getEmailAuth(String requestedEmail) {
+    private EmailAuth getEmailAuthOrElseThrow(String requestedEmail) throws BadRequestException {
         return emailAuthRepository.findByEmail(requestedEmail)
                 .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "이메일 인증을 요청한 적 없는 회원입니다."));
     }
 
-    private static void checkEmailAuthCodeValid(String authCode, EmailAuth emailAuth) {
+    private void checkEmailAuthCodeValid(String authCode, EmailAuth emailAuth) throws BadRequestException {
         if(emailAuth.isEmailAuthCodeWrong(authCode)) throw new BadRequestException(BadRequestErrorCode.NOT_MATCHES, "인증 코드가 일치하지 않습니다.");
         if(emailAuth.isEmailAuthCodeExpired()) throw new BadRequestException(BadRequestErrorCode.TIME_OUT, "인증코드 유효 시간이 지났습니다.");
     }
 
+    public void checkEmailAuthed(String email){
+        EmailAuth emailAuth = getEmailAuthOrElseThrow(email);
+        if(!emailAuth.getAuthed()) throw new BadRequestException(BadRequestErrorCode.NOT_AUTHED);
+    }
 
 }
