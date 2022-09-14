@@ -23,8 +23,17 @@ public class EmailAuthService {
     @Transactional
     public void requestEmailVerify(String email){
         String authCode = EmailAuth.createCode();
-        saveEmailAuth(authCode, email);
+        if(emailAuthRepository.existsByEmail(email)) updateEmailAuth(authCode, email);
+        else saveEmailAuth(authCode, email);
         sendAuthCodeEmail(authCode, email);
+    }
+
+    private void updateEmailAuth(String authCode, String email) {
+        EmailAuth emailAuth = getEmailAuth(email);
+        emailAuth.updateAuthed(false);
+        emailAuth.updateAuthCode(authCode);
+        emailAuth.updateAuthValidTime(LocalDateTime.now().plusMinutes(5));
+        emailAuthRepository.save(emailAuth);
     }
 
     private void saveEmailAuth(String authCode, String email){
