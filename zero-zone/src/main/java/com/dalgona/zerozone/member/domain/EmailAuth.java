@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Getter
 @NoArgsConstructor
@@ -50,6 +51,16 @@ public class EmailAuth {
     public EmailAuth updateAuthValidTime(LocalDateTime authValidTime){
         this.authValidTime = authValidTime;
         return this;
+    }
+
+    public static String createCode() {
+        StringBuffer key = new StringBuffer();
+        Random rnd = new Random();
+
+        for (int i = 0; i < 6; i++) {
+            key.append((rnd.nextInt(10)));
+        }
+        return key.toString();
     }
 }
 

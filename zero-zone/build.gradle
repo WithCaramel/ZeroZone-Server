@@ -32,6 +32,12 @@ dependencies {
 
 	// h2
 	runtimeOnly 'com.h2database:h2'
+
+	// email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// 객체 유효성 검증
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
