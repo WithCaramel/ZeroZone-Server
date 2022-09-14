@@ -19,7 +19,7 @@ public class EmailAuthService {
     private final EmailAuthRepository emailAuthRepository;
 
     @Transactional
-    public void authenticateEmail(String email){
+    public void requestEmailVerify(String email){
         String authCode = EmailAuth.createCode();
         saveEmailAuth(authCode, email);
         sendAuthCodeEmail(authCode, email);
