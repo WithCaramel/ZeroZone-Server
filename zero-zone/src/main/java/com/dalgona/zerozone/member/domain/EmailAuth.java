@@ -62,5 +62,14 @@ public class EmailAuth {
         }
         return key.toString();
     }
+
+    public boolean isEmailAuthCodeWrong(String requestedAuthCode){
+        return authCode.compareTo(requestedAuthCode) != 0;
+    }
+
+    public boolean isEmailAuthCodeExpired(){
+        return authValidTime.isBefore(LocalDateTime.now());
+    }
+
 }
 

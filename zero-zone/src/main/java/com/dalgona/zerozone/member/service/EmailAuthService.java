@@ -1,5 +1,7 @@
 package com.dalgona.zerozone.member.service;
 
+import com.dalgona.zerozone.common.exception.BadRequestErrorCode;
+import com.dalgona.zerozone.common.exception.BadRequestException;
 import com.dalgona.zerozone.common.exception.InternalServerException;
 import com.dalgona.zerozone.member.domain.EmailAuth;
 import com.dalgona.zerozone.member.domain.EmailAuthRepository;
@@ -50,4 +52,23 @@ public class EmailAuthService {
         msg += "</td></tr></tbody></table></div>";
         return msg;
     }
+
+    @Transactional
+    public void verifyEmail(String email, String authCode) throws BadRequestException {
+        EmailAuth emailAuth = getEmailAuth(email);
+        checkEmailAuthCodeValid(authCode, emailAuth);
+        emailAuth.updateAuthed(true);
+    }
+
+    private EmailAuth getEmailAuth(String requestedEmail) {
+        return emailAuthRepository.findByEmail(requestedEmail)
+                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "이메일 인증을 요청한 적 없는 회원입니다."));
+    }
+
+    private static void checkEmailAuthCodeValid(String authCode, EmailAuth emailAuth) {
+        if(emailAuth.isEmailAuthCodeWrong(authCode)) throw new BadRequestException(BadRequestErrorCode.NOT_MATCHES, "인증 코드가 일치하지 않습니다.");
+        if(emailAuth.isEmailAuthCodeExpired()) throw new BadRequestException(BadRequestErrorCode.TIME_OUT, "인증코드 유효 시간이 지났습니다.");
+    }
+
+
 }
