@@ -69,12 +69,12 @@ public class EmailAuthService {
         emailAuth.updateAuthed(true);
     }
 
-    private EmailAuth getEmailAuthOrElseThrow(String requestedEmail) {
+    private EmailAuth getEmailAuthOrElseThrow(String requestedEmail) throws BadRequestException {
         return emailAuthRepository.findByEmail(requestedEmail)
                 .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "이메일 인증을 요청한 적 없는 회원입니다."));
     }
 
-    private static void checkEmailAuthCodeValid(String authCode, EmailAuth emailAuth) {
+    public static void checkEmailAuthCodeValid(String authCode, EmailAuth emailAuth) throws BadRequestException {
         if(emailAuth.isEmailAuthCodeWrong(authCode)) throw new BadRequestException(BadRequestErrorCode.NOT_MATCHES, "인증 코드가 일치하지 않습니다.");
         if(emailAuth.isEmailAuthCodeExpired()) throw new BadRequestException(BadRequestErrorCode.TIME_OUT, "인증코드 유효 시간이 지났습니다.");
     }
