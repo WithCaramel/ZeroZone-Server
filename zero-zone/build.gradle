@@ -38,6 +38,9 @@ dependencies {
 
 	// 객체 유효성 검증
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// spring security 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.5.4'
 }
 
 tasks.named('test') {
