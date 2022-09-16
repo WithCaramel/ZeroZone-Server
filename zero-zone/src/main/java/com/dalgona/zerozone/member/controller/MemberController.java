@@ -4,7 +4,10 @@ import com.dalgona.zerozone.common.response.OnlyResponseString;
 import com.dalgona.zerozone.member.domain.Member;
 import com.dalgona.zerozone.member.dto.MemberLoginRequestDto;
 import com.dalgona.zerozone.member.dto.MemberSaveRequestDto;
+import com.dalgona.zerozone.member.dto.PasswordUpdateRequestDto;
 import com.dalgona.zerozone.member.service.MemberService;
+import com.dalgona.zerozone.security.dto.MemberInfoResponseDto;
+import com.dalgona.zerozone.security.dto.NameUpdateRequestDto;
 import com.dalgona.zerozone.security.dto.TokenDto;
 import com.dalgona.zerozone.security.dto.TokenRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +42,28 @@ public class MemberController {
     public TokenDto reissue(@RequestBody TokenRequestDto dto){
         return memberService.reissue(dto);
     }
+
+    @GetMapping("/members/info")
+    public MemberInfoResponseDto getMemberInfo(@AuthenticationPrincipal Member member){
+        return memberService.getInfo(member);
+    }
+
+    @PatchMapping("/members/name")
+    public OnlyResponseString updateMemberName(
+            @AuthenticationPrincipal Member member,
+            @RequestBody @Valid NameUpdateRequestDto newName
+    ){
+        memberService.updateName(member, newName.getName());
+        return OnlyResponseString.of("이름 변경에 성공했습니다.");
+    }
+
+    @PatchMapping("/members/password")
+    public OnlyResponseString updateMemberPassword(
+            @RequestBody @Valid PasswordUpdateRequestDto newPassword
+    ){
+        memberService.updatePassword(newPassword.getEmail(), newPassword.getNewPassword());
+        return OnlyResponseString.of("비밀번호 변경에 성공했습니다.");
+    }
+
 
 }
