@@ -1,5 +1,7 @@
 package com.dalgona.zerozone.security;
 
+import com.dalgona.zerozone.security.exception.CustomAccessDeniedHandler;
+import com.dalgona.zerozone.security.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final JwtProvider jwtProvider;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     @Override
@@ -40,8 +46,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/members/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                .anyRequest().hasRole("USER");
+                .antMatchers(HttpMethod.GET, "/exception/**", "/ping").permitAll()
+                .anyRequest().hasRole("USER")
+
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
+
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
     }
 
