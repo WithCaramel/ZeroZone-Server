@@ -7,6 +7,7 @@ import com.dalgona.zerozone.member.domain.MemberRepository;
 import com.dalgona.zerozone.member.domain.RefreshToken;
 import com.dalgona.zerozone.member.dto.MemberSaveRequestDto;
 import com.dalgona.zerozone.security.JwtProvider;
+import com.dalgona.zerozone.security.dto.MemberInfoResponseDto;
 import com.dalgona.zerozone.security.dto.TokenDto;
 import com.dalgona.zerozone.security.dto.TokenRequestDto;
 import com.dalgona.zerozone.security.exception.AuthErrorCode;
@@ -61,7 +62,7 @@ public class MemberService {
 
     private void checkPassword(String requestPassword, String encodedOriginPassword) {
         boolean isNotCorrectPassword = !(passwordEncoder.matches(requestPassword, encodedOriginPassword));
-        if(isNotCorrectPassword) throw new BadRequestException(BadRequestErrorCode.NOT_MATCHES);
+        if(isNotCorrectPassword) throw new BadRequestException(BadRequestErrorCode.NOT_MATCHES, "비밀번호가 일치하지 않습니다.");
     }
 
     private Member findMemberOrElseThrow(String email) {
@@ -113,6 +114,22 @@ public class MemberService {
         if (isNotValid)
             throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
     }
-    
-    
+
+    @Transactional
+    public MemberInfoResponseDto getInfo(Member member) {
+        return MemberInfoResponseDto.of(member);
+    }
+
+    @Transactional
+    public void updateName(Member member, String newName) {
+        memberRepository.save(member.updateName(newName));
+    }
+
+    @Transactional
+    public void updatePassword(String email, String newPassword) {
+        Member member = findMemberOrElseThrow(email);
+        emailAuthService.checkEmailAuthed(member.getEmail());
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        memberRepository.save(member.updatePassword(encodedNewPassword));
+    }
 }
