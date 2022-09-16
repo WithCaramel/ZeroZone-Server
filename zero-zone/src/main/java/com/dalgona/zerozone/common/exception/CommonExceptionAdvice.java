@@ -1,6 +1,7 @@
 package com.dalgona.zerozone.common.exception;
 
 import com.dalgona.zerozone.common.response.ErrorEntity;
+import com.dalgona.zerozone.security.exception.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,13 @@ public class CommonExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorEntity commonJpaException(InternalServerException e) {
         log.error("Internal Server Exception({}) - {}", e.getErrorCode(), e.getErrorMessage());
+        return new ErrorEntity(e.getErrorCode().toString(), e.getErrorMessage());
+    }
+
+    @ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorEntity authException(AuthException e) {
+        log.error("Auth Exception({}) - {}", e.getErrorCode().toString(), e.getErrorMessage());
         return new ErrorEntity(e.getErrorCode().toString(), e.getErrorMessage());
     }
 
