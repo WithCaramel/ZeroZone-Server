@@ -39,7 +39,7 @@ public class MemberController {
     }
 
     @PostMapping("/members/token/reissue")
-    public TokenDto reissue(@RequestBody TokenRequestDto dto){
+    public TokenDto reissue(@RequestBody @Valid TokenRequestDto dto){
         return memberService.reissue(dto);
     }
 
