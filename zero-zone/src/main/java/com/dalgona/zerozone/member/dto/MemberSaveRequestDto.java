@@ -8,15 +8,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberSaveRequestDto {
-    @Email String email;
-    @NotEmpty(message = "회원의 password는 빈값일 수 없습니다.") String password;
-    @NotEmpty(message = "회원의 name은 빈값일 수 없습니다.") String name;
+    @NotNull(message = "email은 null일 수 없습니다.")
+    @Email(message = "email 형식을 지켜야합니다.")
+    String email;
+
+    @NotNull(message = "password는 null일 수 없습니다.")
+    @NotEmpty(message = "회원의 password는 빈값일 수 없습니다.")
+    String password;
+
+    @NotNull(message = "회원의 name은 null일 수 없습니다.")
+    @NotEmpty(message = "회원의 name은 빈값일 수 없습니다.")
+    String name;
 
     public Member toEntity(PasswordEncoder passwordEncoder){
         return Member.builder()
