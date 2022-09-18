@@ -35,9 +35,9 @@ public class SpeakingPracticeController {
     @GetMapping("/letter/coda")
     public List<LetterResponseDto> getCodaListOfLetter(
             @RequestParam Long onsetId,
-            @RequestParam Long necleusId
+            @RequestParam Long nucleusId
     ){
-        return contentSearchService.getCodaList(onsetId, necleusId);
+        return contentSearchService.getCodaList(onsetId, nucleusId);
     }
 
     @GetMapping("/word/onset")
