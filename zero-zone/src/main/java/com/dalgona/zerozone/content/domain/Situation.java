@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Situation {
+public class Situation implements Comparable<Situation> {
 
     @Id
     @Column(name = "SITUATION_ID")
@@ -20,5 +20,11 @@ public class Situation {
 
     @Column(length = 200, nullable = false, unique = true)
     private String situation;
+
+    @Override
+    public int compareTo(Situation s) {
+        Long l = this.getId() - s.getId();
+        return l.intValue();
+    }
 
 }

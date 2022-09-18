@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Nucleus {
+public class Nucleus implements Comparable<Nucleus> {
 
     @Id
     @Column(name = "NUCLEUS_ID")
@@ -21,4 +21,9 @@ public class Nucleus {
     @Column(length = 5, nullable = false, unique = true)
     private String nucleus;
 
+    @Override
+    public int compareTo(Nucleus n) {
+        Long l = this.getId() - n.getId();
+        return l.intValue();
+    }
 }

@@ -14,11 +14,17 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Onset {
+public class Onset implements Comparable<Onset> {
     @Id
     @Column(name = "ONSET_ID")
     private Long id;
 
     @Column(length = 5, nullable = false, unique = true)
     private String onset;
+
+    @Override
+    public int compareTo(Onset o) {
+        Long l = this.getId() - o.getId();
+        return l.intValue();
+    }
 }
