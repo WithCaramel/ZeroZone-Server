@@ -46,12 +46,12 @@ public class CommonExceptionAdvice {
         return new ErrorEntity(errorCode, errorMessage);
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorEntity handleAllExceptions(Exception ex) {
-        Map<String, String> error = new HashMap<>();
-        return new ErrorEntity("Exception", ex.getMessage());
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ErrorEntity handleAllExceptions(Exception ex) {
+//        Map<String, String> error = new HashMap<>();
+//        return new ErrorEntity("Exception", ex.getMessage());
+//    }
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
