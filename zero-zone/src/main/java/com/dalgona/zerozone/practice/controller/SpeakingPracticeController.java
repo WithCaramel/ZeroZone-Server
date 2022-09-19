@@ -7,11 +7,13 @@ import com.dalgona.zerozone.content.domain.Situation;
 import com.dalgona.zerozone.content.dto.LetterResponseDto;
 import com.dalgona.zerozone.content.dto.SentenceResponseDto;
 import com.dalgona.zerozone.content.dto.WordResponseDto;
+import com.dalgona.zerozone.practice.domain.SpeakingProb;
+import com.dalgona.zerozone.practice.dto.SpeakingProbResponseDto;
+import com.dalgona.zerozone.practice.service.SpeakingLetterProbService;
+import com.dalgona.zerozone.practice.service.SpeakingSentenceProbService;
+import com.dalgona.zerozone.practice.service.SpeakingWordProbService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +22,9 @@ import java.util.List;
 @RequestMapping(value = "/speaking-practices")
 public class SpeakingPracticeController {
     public final ContentSearchService contentSearchService;
+    private final SpeakingLetterProbService letterProbService;
+    private final SpeakingWordProbService wordProbService;
+    private final SpeakingSentenceProbService sentenceProbService;
 
     @GetMapping("/letter/onset")
     public List<Onset> getOnsetListOfLetter(){
@@ -41,6 +46,16 @@ public class SpeakingPracticeController {
         return contentSearchService.getCodaList(onsetId, nucleusId);
     }
 
+    @GetMapping("/letter/{letterId}")
+    public SpeakingProbResponseDto getSpeakingLetterProb(@PathVariable Long letterId){
+        return SpeakingProbResponseDto.of(letterProbService.getPractice(letterId));
+    }
+
+    @GetMapping("/letter/random")
+    public SpeakingProbResponseDto getSpeakingLetterProbRandomly(@RequestParam Long onsetId){
+        return SpeakingProbResponseDto.of(letterProbService.getRandomPractice(onsetId));
+    }
+
     @GetMapping("/word/onset")
     public List<Onset> getOnsetListOfWord(){
         return contentSearchService.getOnsetList();
@@ -51,6 +66,16 @@ public class SpeakingPracticeController {
         return contentSearchService.getWordList(onsetId);
     }
 
+    @GetMapping("/word/{wordId}")
+    public SpeakingProbResponseDto getSpeakingWordProb(@PathVariable Long wordId){
+        return SpeakingProbResponseDto.of(wordProbService.getPractice(wordId));
+    }
+
+    @GetMapping("/word/random")
+    public SpeakingProbResponseDto getSpeakingWordProbRandomly(@RequestParam Long onsetId){
+        return SpeakingProbResponseDto.of(wordProbService.getRandomPractice(onsetId));
+    }
+
     @GetMapping("/sentence/situation")
     public List<Situation> getSituationList(){
         return contentSearchService.getSituationList();
@@ -59,6 +84,16 @@ public class SpeakingPracticeController {
     @GetMapping("/sentence")
     public List<SentenceResponseDto> getSentenceList(@RequestParam Long situationId){
         return contentSearchService.getSentenceList(situationId);
+    }
+
+    @GetMapping("/sentence/{sentenceId}")
+    public SpeakingProbResponseDto getSpeakingSentenceProb(@PathVariable Long sentenceId){
+        return SpeakingProbResponseDto.of(sentenceProbService.getPractice(sentenceId));
+    }
+
+    @GetMapping("/sentence/random")
+    public SpeakingProbResponseDto getSpeakingSentenceProbRandomly(@RequestParam Long situationId){
+        return SpeakingProbResponseDto.of(sentenceProbService.getRandomPractice(situationId));
     }
 
 }
