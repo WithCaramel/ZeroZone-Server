@@ -1,5 +1,6 @@
-package com.dalgona.zerozone.content;
+package com.dalgona.zerozone.practice.controller;
 
+import com.dalgona.zerozone.content.ContentSearchService;
 import com.dalgona.zerozone.content.domain.Onset;
 import com.dalgona.zerozone.content.domain.Situation;
 import lombok.RequiredArgsConstructor;
