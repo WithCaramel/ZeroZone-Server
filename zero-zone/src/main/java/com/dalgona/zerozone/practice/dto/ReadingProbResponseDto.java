@@ -20,8 +20,9 @@ public class ReadingProbResponseDto {
     String url;
     String hint;
     String spacingInfo;
+    boolean isBookmarked;
 
-    public static ReadingProbResponseDto of(ReadingProb practice) {
+    public static ReadingProbResponseDto of(ReadingProb practice, boolean isBookmarked) {
         ContentType typeOfRequestReadingProb = practice.getType();
         ReadingProbResponseDto result = new ReadingProbResponseDto();
 
@@ -33,6 +34,7 @@ public class ReadingProbResponseDto {
                     .content(practice.getWord().getWord())
                     .url(practice.getUrl())
                     .hint(practice.createHint())
+                    .isBookmarked(isBookmarked)
                     .build();
         }
         else{
@@ -44,6 +46,7 @@ public class ReadingProbResponseDto {
                     .url(practice.getUrl())
                     .hint(practice.createHint())
                     .spacingInfo(practice.createSpacingInfo())
+                    .isBookmarked(isBookmarked)
                     .build();
         }
         return result;
