@@ -1,8 +1,8 @@
-package com.dalgona.zerozone.bookmark;
+package com.dalgona.zerozone.bookmark.dto;
 
+import com.dalgona.zerozone.bookmark.domain.BookmarkedReadingProb;
 import com.dalgona.zerozone.practice.domain.ContentType;
 import com.dalgona.zerozone.practice.domain.ReadingProb;
-import com.dalgona.zerozone.practice.dto.ReadingProbResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

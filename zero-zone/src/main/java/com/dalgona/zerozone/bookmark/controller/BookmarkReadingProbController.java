@@ -1,5 +1,7 @@
-package com.dalgona.zerozone.bookmark;
+package com.dalgona.zerozone.bookmark.controller;
 
+import com.dalgona.zerozone.bookmark.dto.BookmarkedReadingProbResponseDto;
+import com.dalgona.zerozone.bookmark.service.BookmarkReadingService;
 import com.dalgona.zerozone.common.response.OnlyResponseString;
 import com.dalgona.zerozone.member.domain.Member;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
-package com.dalgona.zerozone.bookmark;
+package com.dalgona.zerozone.bookmark.repository;
 
+import com.dalgona.zerozone.bookmark.domain.BookmarkedReadingProb;
 import com.dalgona.zerozone.member.domain.Member;
 import com.dalgona.zerozone.practice.domain.ReadingProb;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.dalgona.zerozone.bookmark;
+package com.dalgona.zerozone.bookmark.service;
 
 import com.dalgona.zerozone.member.domain.Member;
 

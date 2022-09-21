@@ -1,6 +1,6 @@
 package com.dalgona.zerozone.practice.controller;
 
-import com.dalgona.zerozone.bookmark.BookmarkReadingService;
+import com.dalgona.zerozone.bookmark.service.BookmarkReadingService;
 import com.dalgona.zerozone.content.ContentSearchService;
 import com.dalgona.zerozone.content.domain.Onset;
 import com.dalgona.zerozone.content.domain.Situation;

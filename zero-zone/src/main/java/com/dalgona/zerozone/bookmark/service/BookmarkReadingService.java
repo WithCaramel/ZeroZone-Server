@@ -1,5 +1,8 @@
-package com.dalgona.zerozone.bookmark;
+package com.dalgona.zerozone.bookmark.service;
 
+import com.dalgona.zerozone.bookmark.domain.BookmarkedReadingProb;
+import com.dalgona.zerozone.bookmark.dto.BookmarkedReadingProbResponseDto;
+import com.dalgona.zerozone.bookmark.repository.BookmarkedReadingProbRepository;
 import com.dalgona.zerozone.common.exception.BadRequestErrorCode;
 import com.dalgona.zerozone.common.exception.BadRequestException;
 import com.dalgona.zerozone.member.domain.Member;

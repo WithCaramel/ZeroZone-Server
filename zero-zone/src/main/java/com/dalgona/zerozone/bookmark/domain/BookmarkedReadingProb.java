@@ -1,4 +1,4 @@
-package com.dalgona.zerozone.bookmark;
+package com.dalgona.zerozone.bookmark.domain;
 
 import com.dalgona.zerozone.member.domain.Member;
 import com.dalgona.zerozone.practice.domain.ReadingProb;
