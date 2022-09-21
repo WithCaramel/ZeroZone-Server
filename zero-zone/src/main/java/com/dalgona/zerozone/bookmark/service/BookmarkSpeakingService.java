@@ -24,7 +24,7 @@ public class BookmarkSpeakingService implements BookmarkServiceInterface {
     private final SpeakingProbRepository speakingProbRepository;
     private final BookmarkedSpeakingProbRepository bookmarkedSpeakingProbRepository;
     @Setter private Member member;
-    final int PAGE_SIZE = 50;
+    final int PAGE_SIZE = 10;
 
     @Transactional
     @Override
