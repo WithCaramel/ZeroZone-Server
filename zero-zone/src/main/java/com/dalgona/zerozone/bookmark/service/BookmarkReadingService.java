@@ -25,7 +25,7 @@ public class BookmarkReadingService implements BookmarkServiceInterface{
     private final ReadingProbRepository readingProbRepository;
     private final BookmarkedReadingProbRepository bookmarkedReadingProbRepository;
     @Setter private Member member;
-    final int PAGE_SIZE = 2;
+    final int PAGE_SIZE = 50;
 
     @Transactional
     @Override
