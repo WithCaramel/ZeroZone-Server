@@ -89,7 +89,8 @@ public class BookmarkReadingService implements BookmarkServiceInterface{
 
     private int calculateTotalPage() {
         Long bookmarkCount = bookmarkedReadingProbRepository.countByMember(member);
-        return (int) Math.ceil((bookmarkCount + 0.0) / PAGE_SIZE);
+        int totalPage = (int) Math.ceil((bookmarkCount + 0.0) / PAGE_SIZE);
+        return (totalPage < 1) ? 1 : totalPage;
     }
 
     public boolean isBookmarked(Long readingProbId) {
