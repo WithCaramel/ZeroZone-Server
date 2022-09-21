@@ -1,5 +1,6 @@
 package com.dalgona.zerozone.practice.controller;
 
+import com.dalgona.zerozone.bookmark.service.BookmarkSpeakingService;
 import com.dalgona.zerozone.content.ContentSearchService;
 import com.dalgona.zerozone.content.domain.Nucleus;
 import com.dalgona.zerozone.content.domain.Onset;
@@ -7,12 +8,14 @@ import com.dalgona.zerozone.content.domain.Situation;
 import com.dalgona.zerozone.content.dto.LetterResponseDto;
 import com.dalgona.zerozone.content.dto.SentenceResponseDto;
 import com.dalgona.zerozone.content.dto.WordResponseDto;
+import com.dalgona.zerozone.member.domain.Member;
 import com.dalgona.zerozone.practice.domain.SpeakingProb;
 import com.dalgona.zerozone.practice.dto.SpeakingProbResponseDto;
 import com.dalgona.zerozone.practice.service.SpeakingLetterProbService;
 import com.dalgona.zerozone.practice.service.SpeakingSentenceProbService;
 import com.dalgona.zerozone.practice.service.SpeakingWordProbService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +28,7 @@ public class SpeakingPracticeController {
     private final SpeakingLetterProbService letterProbService;
     private final SpeakingWordProbService wordProbService;
     private final SpeakingSentenceProbService sentenceProbService;
+    private final BookmarkSpeakingService bookmarkSpeakingService;
 
     @GetMapping("/letter/onset")
     public List<Onset> getOnsetListOfLetter(){
@@ -47,13 +51,23 @@ public class SpeakingPracticeController {
     }
 
     @GetMapping("/letter/{letterId}")
-    public SpeakingProbResponseDto getSpeakingLetterProb(@PathVariable Long letterId){
-        return SpeakingProbResponseDto.of(letterProbService.getPractice(letterId));
+    public SpeakingProbResponseDto getSpeakingLetterProb(
+            @PathVariable Long letterId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = letterProbService.getPractice(letterId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
     }
 
     @GetMapping("/letter/random")
-    public SpeakingProbResponseDto getSpeakingLetterProbRandomly(@RequestParam Long onsetId){
-        return SpeakingProbResponseDto.of(letterProbService.getRandomPractice(onsetId));
+    public SpeakingProbResponseDto getSpeakingLetterProbRandomly(
+            @RequestParam Long onsetId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = letterProbService.getRandomPractice(onsetId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
     }
 
     @GetMapping("/word/onset")
@@ -67,13 +81,23 @@ public class SpeakingPracticeController {
     }
 
     @GetMapping("/word/{wordId}")
-    public SpeakingProbResponseDto getSpeakingWordProb(@PathVariable Long wordId){
-        return SpeakingProbResponseDto.of(wordProbService.getPractice(wordId));
+    public SpeakingProbResponseDto getSpeakingWordProb(
+            @PathVariable Long wordId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = wordProbService.getPractice(wordId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
     }
 
     @GetMapping("/word/random")
-    public SpeakingProbResponseDto getSpeakingWordProbRandomly(@RequestParam Long onsetId){
-        return SpeakingProbResponseDto.of(wordProbService.getRandomPractice(onsetId));
+    public SpeakingProbResponseDto getSpeakingWordProbRandomly(
+            @RequestParam Long onsetId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = wordProbService.getRandomPractice(onsetId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
     }
 
     @GetMapping("/sentence/situation")
@@ -87,13 +111,23 @@ public class SpeakingPracticeController {
     }
 
     @GetMapping("/sentence/{sentenceId}")
-    public SpeakingProbResponseDto getSpeakingSentenceProb(@PathVariable Long sentenceId){
-        return SpeakingProbResponseDto.of(sentenceProbService.getPractice(sentenceId));
+    public SpeakingProbResponseDto getSpeakingSentenceProb(
+            @PathVariable Long sentenceId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = sentenceProbService.getPractice(sentenceId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
     }
 
     @GetMapping("/sentence/random")
-    public SpeakingProbResponseDto getSpeakingSentenceProbRandomly(@RequestParam Long situationId){
-        return SpeakingProbResponseDto.of(sentenceProbService.getRandomPractice(situationId));
+    public SpeakingProbResponseDto getSpeakingSentenceProbRandomly(
+            @RequestParam Long situationId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = sentenceProbService.getRandomPractice(situationId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
     }
 
 }
