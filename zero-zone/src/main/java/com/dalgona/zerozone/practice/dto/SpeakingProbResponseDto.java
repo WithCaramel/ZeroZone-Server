@@ -17,8 +17,9 @@ public class SpeakingProbResponseDto {
     Long contentId;
     String content;
     String url;
+    boolean isBookmarked;
 
-    public static SpeakingProbResponseDto of(SpeakingProb practice) {
+    public static SpeakingProbResponseDto of(SpeakingProb practice, boolean isBookmarked) {
         ContentType typeOfRequestSpeakingProb = practice.getType();
         SpeakingProbResponseDto result = new SpeakingProbResponseDto();
 
@@ -29,6 +30,7 @@ public class SpeakingProbResponseDto {
                     .contentId(practice.getLetter().getId())
                     .content(practice.getLetter().getLetter())
                     .url(practice.getUrl())
+                    .isBookmarked(isBookmarked)
                     .build();
         }
         else if(typeOfRequestSpeakingProb == ContentType.WORD){
@@ -38,6 +40,7 @@ public class SpeakingProbResponseDto {
                     .contentId(practice.getWord().getId())
                     .content(practice.getWord().getWord())
                     .url(practice.getUrl())
+                    .isBookmarked(isBookmarked)
                     .build();
         }
         else {
@@ -47,6 +50,7 @@ public class SpeakingProbResponseDto {
                     .contentId(practice.getSentence().getId())
                     .content(practice.getSentence().getSentence())
                     .url(practice.getUrl())
+                    .isBookmarked(isBookmarked)
                     .build();
         }
         return result;
