@@ -1,5 +1,7 @@
 package com.dalgona.zerozone.member.domain;
 
+import com.dalgona.zerozone.exam.domain.Exam;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +40,10 @@ public class Member implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Exam> examList = new ArrayList<>();
 
     // UserDetails //
     @Override
