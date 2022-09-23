@@ -19,6 +19,7 @@ public class BookmarkedSpeakingProbResponseDto {
     ContentType type;
     Long contentId;
     String content;
+    Long probId;
 
     public static BookmarkedSpeakingProbResponseDto of(BookmarkedSpeakingProb bookmarkedSpeakingProb) {
         SpeakingProb practice = bookmarkedSpeakingProb.getSpeakingProb();
@@ -30,6 +31,7 @@ public class BookmarkedSpeakingProbResponseDto {
                     .type(typeOfRequestReadingProb)
                     .contentId(practice.getLetter().getId())
                     .content(practice.getLetter().getLetter())
+                    .probId(practice.getId())
                     .build();
         }
         else if(typeOfRequestReadingProb == ContentType.WORD){
@@ -37,6 +39,7 @@ public class BookmarkedSpeakingProbResponseDto {
                     .type(typeOfRequestReadingProb)
                     .contentId(practice.getWord().getId())
                     .content(practice.getWord().getWord())
+                    .probId(practice.getId())
                     .build();
         }
         else {
@@ -44,6 +47,7 @@ public class BookmarkedSpeakingProbResponseDto {
                     .type(typeOfRequestReadingProb)
                     .contentId(practice.getSentence().getId())
                     .content(practice.getSentence().getSentence())
+                    .probId(practice.getId())
                     .build();
         }
         return result;
