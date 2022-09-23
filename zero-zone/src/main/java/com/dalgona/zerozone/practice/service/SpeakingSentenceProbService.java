@@ -8,7 +8,6 @@ import com.dalgona.zerozone.content.domain.Sentence;
 import com.dalgona.zerozone.content.domain.Situation;
 import com.dalgona.zerozone.content.repository.SentenceRepository;
 import com.dalgona.zerozone.content.repository.SituationRepository;
-import com.dalgona.zerozone.practice.domain.ReadingProb;
 import com.dalgona.zerozone.practice.domain.SpeakingProb;
 import com.dalgona.zerozone.practice.repository.SpeakingProbRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,19 +27,13 @@ public class SpeakingSentenceProbService implements PracticeSearchInterface {
 
     @Transactional
     @Override
-    public SpeakingProb getPractice(Long sentenceId) throws BadRequestException, InternalServerException {
-        Sentence sentence = getSentenceOrElseThrow(sentenceId);
-        return getSpeakingProbOrElseThrow(sentence);
+    public SpeakingProb getPractice(Long speakingProbId) throws BadRequestException, InternalServerException {
+        return getSpeakingProbOrElseThrow(speakingProbId);
     }
 
-    private Sentence getSentenceOrElseThrow(Long sentenceId) {
-        return sentenceRepository.findById(sentenceId)
-                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 문장입니다."));
-    }
-
-    private SpeakingProb getSpeakingProbOrElseThrow(Sentence sentence) {
-        return speakingProbRepository.findBySentence(sentence)
-                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제를 조회했습니다."));
+    private SpeakingProb getSpeakingProbOrElseThrow(Long speakingProbId) {
+        return speakingProbRepository.findById(speakingProbId)
+                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 발음 연습 문제를 조회했습니다."));
     }
 
     @Transactional
@@ -49,7 +42,7 @@ public class SpeakingSentenceProbService implements PracticeSearchInterface {
         Situation situation = getSituationOrElseThrow                                                                                                                 (situationId);
         List<Sentence> sentenceList = sentenceRepository.findAllBySituation(situation);
         Sentence sentence = getSentenceRandomly(sentenceList);
-        return getSpeakingProbOrElseThrow(sentence);
+        return getSpeakingProbBySentenceOrElseThrow(sentence);
     }
 
     private Situation getSituationOrElseThrow(Long situationId) {
@@ -60,5 +53,10 @@ public class SpeakingSentenceProbService implements PracticeSearchInterface {
     private Sentence getSentenceRandomly(List<Sentence> sentenceList) {
         int randomIndex = (int)(Math.random() * sentenceList.size());
         return sentenceList.get(randomIndex);
+    }
+
+    private SpeakingProb getSpeakingProbBySentenceOrElseThrow(Sentence sentence) {
+        return speakingProbRepository.findBySentence(sentence)
+                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제를 조회했습니다."));
     }
 }

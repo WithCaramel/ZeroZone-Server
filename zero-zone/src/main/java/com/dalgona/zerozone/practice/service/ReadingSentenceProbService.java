@@ -26,28 +26,22 @@ public class ReadingSentenceProbService implements PracticeSearchInterface {
 
     @Transactional
     @Override
-    public ReadingProb getPractice(Long sentenceId) throws BadRequestException, InternalServerException {
-        Sentence sentence = getSentenceOrElseThrow(sentenceId);
-        return getReadingProbOrElseThrow(sentence);
+    public ReadingProb getPractice(Long readingProbId) throws BadRequestException {
+        return getReadingProbBySentenceOrElseThrow(readingProbId);
     }
 
-    private Sentence getSentenceOrElseThrow(Long sentenceId) {
-        return sentenceRepository.findById(sentenceId)
-                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 문장입니다."));
-    }
-
-    private ReadingProb getReadingProbOrElseThrow(Sentence sentence) {
-        return readingProbRepository.findBySentence(sentence)
-                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제를 조회했습니다."));
+    private ReadingProb getReadingProbBySentenceOrElseThrow(Long readingProbId) {
+        return readingProbRepository.findById(readingProbId)
+                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제입니다."));
     }
 
     @Transactional
     @Override
-    public ReadingProb getRandomPractice(Long situationId) throws BadRequestException {
-        Situation situation = getSituationOrElseThrow                                                                                                                 (situationId);
+    public ReadingProb getRandomPractice(Long situationId) throws BadRequestException, InternalServerException {
+        Situation situation = getSituationOrElseThrow(situationId);
         List<Sentence> sentenceList = sentenceRepository.findAllBySituation(situation);
         Sentence sentence = getSentenceRandomly(sentenceList);
-        return getReadingProbOrElseThrow(sentence);
+        return getReadingProbBySentenceOrElseThrow(sentence);
     }
 
     private Situation getSituationOrElseThrow(Long situationId) {
@@ -58,6 +52,11 @@ public class ReadingSentenceProbService implements PracticeSearchInterface {
     private Sentence getSentenceRandomly(List<Sentence> sentenceList) {
         int randomIndex = (int)(Math.random() * sentenceList.size());
         return sentenceList.get(randomIndex);
+    }
+
+    private ReadingProb getReadingProbBySentenceOrElseThrow(Sentence sentence) {
+        return readingProbRepository.findBySentence(sentence)
+                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제를 조회했습니다."));
     }
 
 }

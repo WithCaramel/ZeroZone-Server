@@ -30,6 +30,16 @@ public class SpeakingPracticeController {
     private final SpeakingSentenceProbService sentenceProbService;
     private final BookmarkSpeakingService bookmarkSpeakingService;
 
+    @GetMapping("/{speakingProbId}")
+    public SpeakingProbResponseDto getSpeakingProb(
+            @PathVariable Long speakingProbId,
+            @AuthenticationPrincipal Member member){
+        SpeakingProb practice = letterProbService.getPractice(speakingProbId);
+        bookmarkSpeakingService.setMember(member);
+        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+        return SpeakingProbResponseDto.of(practice, isBookmarked);
+    }
+
     @GetMapping("/letter/onset")
     public List<Onset> getOnsetListOfLetter(){
         return contentSearchService.getOnsetList();
@@ -50,15 +60,15 @@ public class SpeakingPracticeController {
         return contentSearchService.getCodaList(onsetId, nucleusId);
     }
 
-    @GetMapping("/letter/{letterId}")
-    public SpeakingProbResponseDto getSpeakingLetterProb(
-            @PathVariable Long letterId,
-            @AuthenticationPrincipal Member member){
-        SpeakingProb practice = letterProbService.getPractice(letterId);
-        bookmarkSpeakingService.setMember(member);
-        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
-        return SpeakingProbResponseDto.of(practice, isBookmarked);
-    }
+//    @GetMapping("/letter/{letterId}")
+//    public SpeakingProbResponseDto getSpeakingLetterProb(
+//            @PathVariable Long letterId,
+//            @AuthenticationPrincipal Member member){
+//        SpeakingProb practice = letterProbService.getPractice(letterId);
+//        bookmarkSpeakingService.setMember(member);
+//        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+//        return SpeakingProbResponseDto.of(practice, isBookmarked);
+//    }
 
     @GetMapping("/letter/random")
     public SpeakingProbResponseDto getSpeakingLetterProbRandomly(
@@ -80,15 +90,15 @@ public class SpeakingPracticeController {
         return contentSearchService.getWordList(onsetId);
     }
 
-    @GetMapping("/word/{wordId}")
-    public SpeakingProbResponseDto getSpeakingWordProb(
-            @PathVariable Long wordId,
-            @AuthenticationPrincipal Member member){
-        SpeakingProb practice = wordProbService.getPractice(wordId);
-        bookmarkSpeakingService.setMember(member);
-        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
-        return SpeakingProbResponseDto.of(practice, isBookmarked);
-    }
+//    @GetMapping("/word/{wordId}")
+//    public SpeakingProbResponseDto getSpeakingWordProb(
+//            @PathVariable Long wordId,
+//            @AuthenticationPrincipal Member member){
+//        SpeakingProb practice = wordProbService.getPractice(wordId);
+//        bookmarkSpeakingService.setMember(member);
+//        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+//        return SpeakingProbResponseDto.of(practice, isBookmarked);
+//    }
 
     @GetMapping("/word/random")
     public SpeakingProbResponseDto getSpeakingWordProbRandomly(
@@ -110,15 +120,15 @@ public class SpeakingPracticeController {
         return contentSearchService.getSentenceList(situationId);
     }
 
-    @GetMapping("/sentence/{sentenceId}")
-    public SpeakingProbResponseDto getSpeakingSentenceProb(
-            @PathVariable Long sentenceId,
-            @AuthenticationPrincipal Member member){
-        SpeakingProb practice = sentenceProbService.getPractice(sentenceId);
-        bookmarkSpeakingService.setMember(member);
-        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
-        return SpeakingProbResponseDto.of(practice, isBookmarked);
-    }
+//    @GetMapping("/sentence/{sentenceId}")
+//    public SpeakingProbResponseDto getSpeakingSentenceProb(
+//            @PathVariable Long sentenceId,
+//            @AuthenticationPrincipal Member member){
+//        SpeakingProb practice = sentenceProbService.getPractice(sentenceId);
+//        bookmarkSpeakingService.setMember(member);
+//        boolean isBookmarked = bookmarkSpeakingService.isBookmarked(practice.getId());
+//        return SpeakingProbResponseDto.of(practice, isBookmarked);
+//    }
 
     @GetMapping("/sentence/random")
     public SpeakingProbResponseDto getSpeakingSentenceProbRandomly(

@@ -25,28 +25,22 @@ public class SpeakingLetterProbService implements PracticeSearchInterface {
 
     @Transactional
     @Override
-    public SpeakingProb getPractice(Long letterId) throws BadRequestException, InternalServerException {
-        Letter letter = getLetterOrElseThrow(letterId);
-        return getSpeakingProbOrElseThrow(letter);
+    public SpeakingProb getPractice(Long speakingProbId) throws BadRequestException {
+        return getSpeakingProbOrElseThrow(speakingProbId);
     }
 
-    private Letter getLetterOrElseThrow(Long letterId) {
-        return letterRepository.findById(letterId)
-                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 글자입니다."));
-    }
-
-    private SpeakingProb getSpeakingProbOrElseThrow(Letter letter) {
-        return speakingProbRepository.findByLetter(letter)
-                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 발음 연습 문제를 조회했습니다."));
+    private SpeakingProb getSpeakingProbOrElseThrow(Long speakingProbId) {
+        return speakingProbRepository.findById(speakingProbId)
+                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 발음 연습 문제를 조회했습니다."));
     }
 
     @Transactional
     @Override
-    public SpeakingProb getRandomPractice(Long onsetId) throws BadRequestException {
+    public SpeakingProb getRandomPractice(Long onsetId) throws BadRequestException, InternalServerException {
         Onset onset = getOnsetOrElseThrow(onsetId);
         List<Letter> letterList = letterRepository.findAllByOnset(onset);
         Letter randomLetter = getLetterRandomly(letterList);
-        return getSpeakingProbOrElseThrow(randomLetter);
+        return getSpeakingProbByLetterOrElseThrow(randomLetter);
     }
 
     private Onset getOnsetOrElseThrow(Long onsetId) {
@@ -57,5 +51,10 @@ public class SpeakingLetterProbService implements PracticeSearchInterface {
     private Letter getLetterRandomly(List<Letter> letterList) {
         int randomIndex = (int)(Math.random() * letterList.size());
         return letterList.get(randomIndex);
+    }
+
+    private SpeakingProb getSpeakingProbByLetterOrElseThrow(Letter letter) {
+        return speakingProbRepository.findByLetter(letter)
+                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 발음 연습 문제를 조회했습니다."));
     }
 }
