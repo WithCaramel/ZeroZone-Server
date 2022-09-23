@@ -24,20 +24,30 @@ public class ReadingPracticeController {
     private final ReadingSentenceProbService readingSentenceProbService;
     private final BookmarkReadingService bookmarkReadingService;
 
+    @GetMapping("/{readingProbId}")
+    public ReadingProbResponseDto getReadingProb(
+            @PathVariable Long readingProbId,
+            @AuthenticationPrincipal Member member){
+        ReadingProb practice = readingWordProbService.getPractice(readingProbId);
+        bookmarkReadingService.setMember(member);
+        boolean isBookmarked = bookmarkReadingService.isBookmarked(practice.getId());
+        return ReadingProbResponseDto.of(practice, isBookmarked);
+    }
+
     @GetMapping("/word/onset")
     public List<Onset> getOnsetList(){
         return contentSearchService.getOnsetList();
     }
 
-    @GetMapping("/word/{wordId}")
-    public ReadingProbResponseDto getReadingWordProb(
-            @PathVariable Long wordId,
-            @AuthenticationPrincipal Member member){
-        ReadingProb practice = readingWordProbService.getPractice(wordId);
-        bookmarkReadingService.setMember(member);
-        boolean isBookmarked = bookmarkReadingService.isBookmarked(practice.getId());
-        return ReadingProbResponseDto.of(practice, isBookmarked);
-    }
+//    @GetMapping("/word/{wordId}")
+//    public ReadingProbResponseDto getReadingWordProb(
+//            @PathVariable Long wordId,
+//            @AuthenticationPrincipal Member member){
+//        ReadingProb practice = readingWordProbService.getPractice(wordId);
+//        bookmarkReadingService.setMember(member);
+//        boolean isBookmarked = bookmarkReadingService.isBookmarked(practice.getId());
+//        return ReadingProbResponseDto.of(practice, isBookmarked);
+//    }
 
     @GetMapping("/word/random")
     public ReadingProbResponseDto getReadingWordProbRandomly(
@@ -54,15 +64,15 @@ public class ReadingPracticeController {
         return contentSearchService.getSituationList();
     }
 
-    @GetMapping("/sentence/{sentenceId}")
-    public ReadingProbResponseDto getReadingSentenceProb(
-            @PathVariable Long sentenceId,
-            @AuthenticationPrincipal Member member){
-        ReadingProb practice = readingSentenceProbService.getPractice(sentenceId);
-        bookmarkReadingService.setMember(member);
-        boolean isBookmarked = bookmarkReadingService.isBookmarked(practice.getId());
-        return ReadingProbResponseDto.of(practice, isBookmarked);
-    }
+//    @GetMapping("/sentence/{sentenceId}")
+//    public ReadingProbResponseDto getReadingSentenceProb(
+//            @PathVariable Long sentenceId,
+//            @AuthenticationPrincipal Member member){
+//        ReadingProb practice = readingSentenceProbService.getPractice(sentenceId);
+//        bookmarkReadingService.setMember(member);
+//        boolean isBookmarked = bookmarkReadingService.isBookmarked(practice.getId());
+//        return ReadingProbResponseDto.of(practice, isBookmarked);
+//    }
 
     @GetMapping("/sentence/random")
     public ReadingProbResponseDto getReadingSentenceProbRandomly(

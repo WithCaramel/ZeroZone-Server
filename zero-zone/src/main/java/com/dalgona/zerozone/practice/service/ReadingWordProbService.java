@@ -26,28 +26,22 @@ public class ReadingWordProbService implements PracticeSearchInterface {
 
     @Transactional
     @Override
-    public ReadingProb getPractice(Long wordId) throws BadRequestException, InternalServerException {
-        Word word = getWordOrElseThrow(wordId);
-        return getReadingProbOrElseThrow(word);
+    public ReadingProb getPractice(Long readingProbId) throws BadRequestException {
+        return getReadingProbOrElseThrow(readingProbId);
     }
 
-    private Word getWordOrElseThrow(Long wordId) {
-        return wordRepository.findById(wordId)
-                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 단어입니다."));
-    }
-
-    private ReadingProb getReadingProbOrElseThrow(Word word) {
-        return readingProbRepository.findByWord(word)
-                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제를 조회했습니다."));
+    private ReadingProb getReadingProbOrElseThrow(Long readingProbId) {
+        return readingProbRepository.findById(readingProbId)
+                .orElseThrow(() -> new BadRequestException(BadRequestErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제입니다."));
     }
 
     @Transactional
     @Override
-    public ReadingProb getRandomPractice(Long onsetId) throws BadRequestException {
+    public ReadingProb getRandomPractice(Long onsetId) throws BadRequestException, InternalServerException {
         Onset onset = getOnsetOrElseThrow(onsetId);
         List<Word> wordList = wordRepository.findAllByOnset(onset);
         Word randomWord = getWordRandomly(wordList);
-        return getReadingProbOrElseThrow(randomWord);
+        return getReadingProbByWordOrElseThrow(randomWord);
     }
 
     private Onset getOnsetOrElseThrow(Long onsetId) {
@@ -58,6 +52,11 @@ public class ReadingWordProbService implements PracticeSearchInterface {
     private Word getWordRandomly(List<Word> wordList) {
         int randomIndex = (int)(Math.random() * wordList.size());
         return wordList.get(randomIndex);
+    }
+
+    private ReadingProb getReadingProbByWordOrElseThrow(Word word) {
+        return readingProbRepository.findByWord(word)
+                .orElseThrow(() -> new InternalServerException(InternalServerErrorCode.NOT_FOUND, "존재하지 않는 구화 연습 문제를 조회했습니다."));
     }
 
 }
