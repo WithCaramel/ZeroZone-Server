@@ -30,11 +30,11 @@ public class ReadingProb {
     @Column
     private String url;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "WORD_ID")
     private Word word;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SENTENCE_ID")
     private Sentence sentence;
 
