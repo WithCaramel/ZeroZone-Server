@@ -64,6 +64,7 @@ public class ExamCreateController {
             @RequestBody @Valid ExamCreateRequestDto examCreateRequestDto,
             @AuthenticationPrincipal Member member
     ){
+        // TODO : 템플릿 패턴 적용
         integrateExamCreateService.setMember(member);
         return integrateExamCreateService.createExam(examCreateRequestDto);
     }
