@@ -21,7 +21,7 @@ public class ExamProb {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "EXAMPROB_INDEX")
     private int index;
 
     @Column
