@@ -20,7 +20,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -102,8 +105,6 @@ public class CommonExamService {
     }
 
 
-    // 시험 채점(이때 문제 저장)
-    // 연속 요청하면 업데이트
     @Transactional
     public Long updateExamProbsResult(Long examProbId, ExamResultUpdateRequestDto resultUpdateRequestDto){
         Exam exam = getExamOrElseThrow(examProbId);
@@ -117,6 +118,12 @@ public class CommonExamService {
         if(examResultList.size() != exam.getProbCount())
             throw new BadRequestException(BadRequestErrorCode.NOT_MATCHES, "시험의 문제 개수와 채점 요청한 문제 개수가 일치하지 않습니다.");
 
+        if(resultUpdateRequestDto.getCorrectCount() < 0 || resultUpdateRequestDto.getCorrectCount() > exam.getProbCount())
+            throw new BadRequestException(BadRequestErrorCode.SCALE_ERROR, "맞은 개수의 범위가 유효하지 않습니다.");
+
+        ArrayList<Integer> indexList = getIndexList(examResultList);
+        checkIndexInfoValid(indexList);
+
         for(ExamProbResult examProbResult:examResultList){
             Long readingProbId = examProbResult.getReadingProbId();
             ReadingProb readingProb = readingProbRepository.findById(readingProbId)
@@ -125,6 +132,41 @@ public class CommonExamService {
         }
         exam.updateCorrectCount(resultUpdateRequestDto.getCorrectCount());
         return exam.getId();
+    }
+
+    private static ArrayList<Integer> getIndexList(List<ExamProbResult> examResultList) {
+        ArrayList<Integer> indexList = new ArrayList<>();
+        for(ExamProbResult examProbResult: examResultList){
+            indexList.add(examProbResult.getIndex());
+        }
+        return indexList;
+    }
+
+    private void checkIndexInfoValid(ArrayList<Integer> indexInfo) {
+        if (indexInfo.size() <= 1) {
+            return;
+        }
+
+        Integer min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int i: indexInfo){
+            if (i < min) { min = i; }
+            if (i > max) { max = i; }
+        }
+
+        if(min != 1) throw new BadRequestException(BadRequestErrorCode.SCALE_ERROR, "요청한 인덱스가 1로 시작하지 않습니다.");
+
+        Set<Integer> visited = new HashSet<>();
+        for (int i: indexInfo) {
+            if (visited.contains(i)) {
+                throw new BadRequestException(BadRequestErrorCode.SCALE_ERROR, "요청한 인덱스에 중복이 있습니다.");
+            }
+            visited.add(i);
+        }
+
+        if (max - min != indexInfo.size() - 1) {
+            throw new BadRequestException(BadRequestErrorCode.SCALE_ERROR, "요청한 인덱스의 끝값을 다시 확인해주세요.");
+        }
+
     }
 
 
@@ -136,7 +178,8 @@ public class CommonExamService {
 
     @Transactional
     public void deleteExam(Long examId){
-        examRepository.deleteById(examId);
+        if(examRepository.existsById(examId)) examRepository.deleteById(examId);
+        else throw new BadRequestException(BadRequestErrorCode.NOT_FOUND, "해당 시험은 존재하지 않습니다.");
     }
 
 
